@@ -27,7 +27,7 @@ def predict(
             cgpa, dsa, aptitude, certifications, internships, projects
         )
     except Exception as e:
-        result = str(e)
+        result = f"Error: {e}"
 
     return templates.TemplateResponse(
         "index.html", {"request": request, "result": result}
