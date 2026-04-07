@@ -26,8 +26,8 @@ def predict(
         result = backend.predict_result(
             cgpa, dsa, aptitude, certifications, internships, projects
         )
-    except:
-        result = "Enter valid values"
+    except Exception as e:
+        result = str(e)
 
     return templates.TemplateResponse(
         "index.html", {"request": request, "result": result}
