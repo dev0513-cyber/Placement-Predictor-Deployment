@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Placement Predictor</title>
+  </head>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+    }
+
+    .container {
+      width: 350px;
+      margin: 80px auto;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button {
+      width: auto;
+      padding: 10px;
+      background: #22c55e;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .result {
+      margin-top: 20px;
+      white-space: pre-line;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <h1>Student Placement Predictor</h1>
+
+      <form method="POST">
+        <input
+          type="number"
+          step="0.1"
+          name="cgpa"
+          placeholder="CGPA"
+          required
+        />
+        <input type="number" name="dsa" placeholder="DSA Solved" required />
+        <input
+          type="number"
+          name="aptitude"
+          placeholder="Aptitude Score"
+          required
+        />
+        <input
+          type="number"
+          name="certifications"
+          placeholder="Certifications"
+          required
+        />
+        <input
+          type="number"
+          name="internships"
+          placeholder="Internships"
+          required
+        />
+        <input type="number" name="projects" placeholder="Projects" required />
+
+        <button type="submit">Predict</button>
+      </form>
+
+      <p class="result">{{ result }}</p>
+    </div>
+  </body>
+</html>
