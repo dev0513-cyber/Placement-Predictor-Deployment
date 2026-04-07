@@ -1,15 +1,11 @@
-from fastapi import FastAPI, Form, Request
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from flask import Flask, render_template, request
 import joblib
 import numpy as np
 
-app = FastAPI()
-templates = Jinja2Templates(directory="templates")
+app = Flask(__name__)
 
-# Load the trained model
+# Load model once
 model = joblib.load("model.pkl")
-
 
 def predict_result(cgpa, dsa, aptitude, certifications, internships, projects):
     data = np.array([[cgpa, dsa, aptitude, certifications, internships, projects]])
@@ -40,29 +36,21 @@ def predict_result(cgpa, dsa, aptitude, certifications, internships, projects):
             text += "• Work on more projects\n"
     return text
 
+@app.route("/", methods=["GET", "POST"])
+def home():
+    result = ""
+    if request.method == "POST":
+        try:
+            cgpa = float(request.form["cgpa"])
+            dsa = int(request.form["dsa"])
+            aptitude = int(request.form["aptitude"])
+            certifications = int(request.form["certifications"])
+            internships = int(request.form["internships"])
+            projects = int(request.form["projects"])
+            result = predict_result(cgpa, dsa, aptitude, certifications, internships, projects)
+        except Exception as e:
+            result = f"Error: {e}"
+    return render_template("index.html", result=result)
 
-@app.get("/", response_class=HTMLResponse)
-def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, "result": ""})
-
-
-@app.post("/", response_class=HTMLResponse)
-def predict(
-    request: Request,
-    cgpa: float = Form(...),
-    dsa: int = Form(...),
-    aptitude: int = Form(...),
-    certifications: int = Form(...),
-    internships: int = Form(...),
-    projects: int = Form(...),
-):
-    try:
-        result = predict_result(
-            cgpa, dsa, aptitude, certifications, internships, projects
-        )
-    except Exception as e:
-        result = f"Error: {e}"
-
-    return templates.TemplateResponse(
-        "index.html", {"request": request, "result": result}
-    )
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
